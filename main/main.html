@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!-- Khai báo loại tài liệu HTML5 -->
+<html lang="vi">
+<!-- Bắt đầu phần HTML, thiết lập ngôn ngữ là tiếng Việt -->
+<head>
+    <!-- Phần head chứa meta, title, style, v.v. -->
+    <meta charset="utf-8" />
+    <!-- Đặt chuẩn mã hóa ký tự UTF-8 để hiển thị tiếng Việt đúng -->
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <!-- Thuộc tính viewport để trang responsive trên thiết bị di động -->
+    <title>Snake Game - Nâng cấp</title>
+    <!-- Tiêu đề trang hiển thị trên tab trình duyệt -->
+    <style>
+        /* Bắt đầu khối CSS: định dạng giao diện trực tiếp trong file HTML */
+        body {
+            /* font gia đình cho toàn trang */
+            font-family: Arial, Helvetica, sans-serif;
+            /* dùng flexbox để xếp các khu vực ngang (game + info) */
+            display: flex;
+            /* khoảng cách giữa các phần tử ngang */
+            gap: 20px;
+            /* canh theo trục dọc (top) */
+            align-items: flex-start;
+            /* khoảng đệm quanh nội dung */
+            padding: 24px;
+            /* màu nền nhẹ */
+            background: #fafafa;
+        }
+
+        /* vùng chứa khu vực game */
+        #game-area {
+            /* hiển thị dạng cột để canvas trên, HUD dưới */
+            display: flex;
+            flex-direction: column;
+            /* canh giữa theo ngang */
+            align-items: center;
+        }
+
+        /* kiểu cho thẻ canvas */
+        canvas {
+            /* viền để thấy rõ khung chơi */
+            border: 2px solid #333;
+            /* màu nền canvas */
+            background: #f7fff7;
+        }
+
+        /* khu hiển thị nút và điểm */
+        #hud {
+            /* đệm trên so với canvas */
+            margin-top: 12px;
+            /* hiển thị bằng flex */
+            display:flex;
+            /* khoảng cách giữa các phần tử */
+            gap:12px;
+            /* canh giữa theo trục dọc */
+            align-items:center;
+        }
+
+        /* kiểu chung cho nút bấm */
+        button {
+            /* khoảng đệm (padding) trong nút */
+            padding: 8px 12px;
+            /* bo góc */
+            border-radius: 6px;
+            /* viền nút */
+            border: 1px solid #aaa;
+            /* nền trắng */
+            background: #fff;
+            /* con trỏ tay khi hover */
+            cursor: pointer;
+        }
+
+        /* hiệu ứng khi nhấn nút (visual feedback) */
+        button:active { transform: translateY(1px); }
+
+        /* khung thông tin bên phải */
+        #info {
+            /* chiều rộng tối thiểu */
+            min-width: 200px;
+            /* đệm trong */
+            padding: 12px;
+            /* nền trắng */
+            background: #fff;
+            /* viền nhẹ */
+            border: 1px solid #eee;
+            /* bo góc */
+            border-radius: 6px;
+        }
+
+        /* lớp .label dùng để làm tag/nhãn */
+        .label { font-weight: 600; margin-right: 6px; }
+    </style>
+</head>
+<body>
+<!-- Bắt đầu phần body: nơi hiển thị giao diện chính -->
+
+<div id="game-area">
+    <!-- Vùng chứa canvas và HUD -->
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <!-- Thẻ canvas nơi game sẽ được vẽ (kích thước 400x400 pixel) -->
+
+    <div id="hud">
+        <!-- Khu chứa các nút điều khiển và hiển thị điểm -->
+        <button id="btnStart">Start</button>
+        <!-- Nút Start: khi click -> bắt đầu / tiếp tục game -->
+        <button id="btnPause">Pause</button>
+        <!-- Nút Pause: tạm dừng game -->
+        <button id="btnRestart">Restart</button>
+        <!-- Nút Restart: reset game và bắt đầu lại -->
+
+        <div id="scoreBoard">
+            <!-- Vùng hiển thị điểm -->
+            <span class="label">Score:</span> <span id="score">0</span>
+            <!-- Hiển thị điểm hiện tại (id="score") -->
+            &nbsp;&nbsp;
+            <span class="label">Best:</span> <span id="best">0</span>
+            <!-- Hiển thị điểm cao nhất lưu localStorage (id="best") -->
+        </div>
+    </div>
+
+    <p style="margin-top:10px;color:#555;font-size:13px">
+        <!-- Chú thích nhỏ dưới canvas -->
+        Điều khiển: phím mũi tên (↑↓←→). Game sẽ tăng tốc khi bạn ăn được nhiều thức ăn.
+    </p>
+</div>
+
+<div id="info">
+    <!-- Khung thông tin / cấu hình bên phải -->
+    <h4>Thiết lập</h4>
+    <!-- Tiêu đề nhỏ -->
+    <div><span class="label">Kích thước ô:</span><span id="boxSize">20</span></div>
+    <!-- Hiển thị kích thước ô hiện tại (dùng để tham khảo/hiển thị) -->
+    <div><span class="label">Tốc độ ban đầu (ms):</span><span id="speedInit">100</span></div>
+    <!-- Hiển thị tốc độ khởi tạo (ms) -->
+    <div style="margin-top:8px;color:#444">
+        <!-- Giải thích thêm về cơ chế tăng tốc -->
+        Mỗi 5 điểm, tốc độ giảm 10ms (game nhanh hơn). Tốc độ tối thiểu 40ms.
+    </div>
+</div>
+
+<!-- Kết nối file JavaScript chứa logic game -->
+<script src="snake.js"></script>
+<!-- Lưu ý: file snake.js phải nằm cùng thư mục với file HTML này -->
+</body>
+</html>
